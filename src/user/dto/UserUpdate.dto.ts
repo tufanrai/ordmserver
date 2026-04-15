@@ -1,0 +1,38 @@
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  IsOptional,
+  IsNotEmpty,
+  MinLength,
+} from 'class-validator';
+
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty({ message: 'please enter your full name.' })
+  fullName: string;
+
+  @IsOptional()
+  @IsString()
+  @IsEmail({}, { message: 'please enter a valid email address' })
+  @IsNotEmpty({ message: 'please enter your email' })
+  @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
+    message: 'your email does not match the email standards.',
+  })
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty({ message: 'please enter your password' })
+  @MinLength(6, { message: 'your password must contain at least 6 characters' })
+  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/, {
+    message:
+      'Password must contain at least one digit, one lowercase, and one uppercase letter',
+  })
+  password: string;
+
+  @IsOptional()
+  @IsString()
+  restaurantName: string;
+}
