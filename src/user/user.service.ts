@@ -24,16 +24,17 @@ export class UserService {
   }
 
   // PUT: /api/user/:id
-  async updateUserData(id: string, @Body() data: UpdateUserDto) {
+  async updateUserData(id: string, data: UpdateUserDto) {
     const user = await this.userModel.findById(id);
 
     if (!user) throw new CustomError('User not found', HttpStatus.NOT_FOUND);
 
-    if (data.fullName) user.name = data?.fullName;
+    console.log(data);
+
+    if (data.name) user.name = data?.name;
     if (data.email) user.email = data?.email;
     if (data.password) {
       const hashedPassword = await hashPassword(data.password);
-
       if (!hashedPassword)
         throw new CustomError(
           'Internal server error',
@@ -42,7 +43,7 @@ export class UserService {
 
       user.password = hashedPassword;
     }
-    // Restaurant id save.
+    if (data.restaurant) user.restaurant = data.restaurant;
 
     const updatedUserData = await user.save({ validateModifiedOnly: true });
 
@@ -51,11 +52,17 @@ export class UserService {
 
   // DELETE: /api/user/:id
   async deleteUser(id: string) {
-    const deletedSuccess = await this.userModel.findByIdAndDelete(id);
+    const owner = await this.userModel.findById(id);
 
-    if (!deletedSuccess)
+    if (!owner) throw new CustomError('user not found', HttpStatus.NOT_FOUND);
+
+    const deleted = await this.userModel.deleteMany({
+      restaurant: owner?.restaurant,
+    });
+
+    if (!deleted)
       throw new CustomError(
-        'something went wrong, please try again',
+        'Something went wrong please try again',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
