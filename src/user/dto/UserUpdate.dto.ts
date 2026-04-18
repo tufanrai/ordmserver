@@ -11,7 +11,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty({ message: 'please enter your full name.' })
-  fullName: string;
+  name: string;
 
   @IsOptional()
   @IsString()
@@ -34,5 +34,5 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  restaurantName: string;
+  restaurant: string;
 }

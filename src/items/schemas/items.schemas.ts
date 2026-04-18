@@ -6,20 +6,20 @@ export type ItemDocument = HydratedDocument<Item>;
 @Schema({ timestamps: true })
 export class Item {
   @Prop({ required: [true, 'please enter the name of the food item.'] })
-  itemName: string;
+  itemName!: string;
 
   @Prop({ required: [true, 'please enter the price of the food item.'] })
-  price: number;
+  price!: number;
 
   @Prop({ required: [true, 'please enter the category of the food item.'] })
-  category: string;
+  category!: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'restaurant',
     required: [true, 'please pass the restaurant id'],
   })
-  restaurant: mongoose.Types.ObjectId;
+  restaurant!: mongoose.Types.ObjectId;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

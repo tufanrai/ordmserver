@@ -44,4 +44,7 @@ export class MailService {
       `,
     });
   }
+
+  // Notify the sales amount with items
+  async notifyUpdates() {}
 }

@@ -12,7 +12,7 @@ export enum ERole {
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: [true, 'please enter your full name.'] })
-  name: string;
+  name!: string;
 
   @Prop({
     required: [true, 'please enter your email.'],
@@ -21,7 +21,7 @@ export class User {
     lowercase: true,
     trim: true,
   })
-  email: string;
+  email!: string;
 
   @Prop({
     required: [true, 'please enter your password.'],
@@ -31,23 +31,24 @@ export class User {
     ],
     minlength: [6, 'your password must contain at least 6 characters.'],
   })
-  password: string;
+  password!: string;
 
   @Prop({
-    type: String,
-    required: [true, 'please enter restaurant name'],
+    type: mongoose.Types.ObjectId,
+    required: [true, 'please enter restaurant id'],
+    ref: 'restaurant',
   })
-  restaurant: string;
+  restaurant!: mongoose.Types.ObjectId;
 
   @Prop({
     type: String,
     enum: Object.values(ERole),
     default: ERole.owner,
   })
-  role: string;
+  role!: string;
 
   @Prop({ type: Boolean, required: true, default: true })
-  isOneTime: boolean;
+  isOneTime!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

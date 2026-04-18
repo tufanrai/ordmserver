@@ -1,5 +1,9 @@
 import { Body, HttpStatus, Injectable } from '@nestjs/common';
 import { User, UserDocument } from './schemas/user.schema';
+import {
+  Restaurant,
+  RestaurantDocument,
+} from '../restaurant/schema/restaurant.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -12,7 +16,11 @@ import { UpdateUserDto } from './dto/UserUpdate.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Restaurant.name)
+    private restaurantModel: Model<RestaurantDocument>,
+  ) {}
 
   // GET: /api/user/:id
   async getUser(id: string) {
@@ -43,7 +51,17 @@ export class UserService {
 
       user.password = hashedPassword;
     }
-    if (data.restaurant) user.restaurant = data.restaurant;
+    let newRestaurantData;
+    if (data.restaurant) {
+      const restaurant = await this.restaurantModel.findById(user.restaurant);
+
+      if (!restaurant)
+        throw new CustomError('Restaurant not found', HttpStatus.NOT_FOUND);
+
+      newRestaurantData = restaurant.save({ validateModifiedOnly: true });
+    }
+
+    if (data.restaurant) user.restaurant = newRestaurantData._id;
 
     const updatedUserData = await user.save({ validateModifiedOnly: true });
 

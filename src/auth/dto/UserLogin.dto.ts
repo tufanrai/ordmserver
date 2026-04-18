@@ -7,9 +7,9 @@ export class LoginDto {
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
     message: 'your email does not match the email standards.',
   })
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'please enter your password' })
-  password: string;
+  password!: string;
 }

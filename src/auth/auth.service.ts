@@ -8,6 +8,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ERole } from '../user/schemas/user.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
+import {
+  Restaurant,
+  RestaurantDocument,
+} from '../restaurant/schema/restaurant.schema';
 
 // DTOs
 import { RegisterDto } from './dto/UserRegister.dto';
@@ -22,13 +26,29 @@ import { generateToken } from '../utils/jwt.utils';
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Restaurant.name)
+    private restaurantModel: Model<RestaurantDocument>,
     private readonly mailerService: MailService,
   ) {}
 
   // POST: /api/auth/register
-  async registerUser({ password, ...dto }: RegisterDto) {
+  async registerUser({ password, restaurant, ...dto }: RegisterDto) {
+    // Restaurant registration
+    if (!restaurant)
+      throw new CustomError('please enter the name of the restaurant', 401);
+
+    const restaurantId = await this.restaurantModel.create({
+      restaurantName: restaurant,
+    });
+
+    if (!restaurantId)
+      throw new CustomError(
+        'Something went wrong, Please try again',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    // Hash password
     const hashedPassword = await hashPassword(password);
-    console.log(password, dto);
 
     if (!hashedPassword)
       throw new CustomError(
@@ -36,11 +56,14 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
+    // User's account creation
     const user = await this.userModel.create({
       password: hashedPassword,
+      restaurant: restaurantId._id,
       ...dto,
     });
 
+    // Staff's id creation
     if (user) {
       const demoPass = `TempPass${Math.random()}`;
 
@@ -48,7 +71,7 @@ export class AuthService {
         name: 'Kitchen',
         email: `kitchen@${dto.email.split('@')[1]}`,
         password: demoPass,
-        restaurant: dto.restaurant,
+        restaurant: restaurantId._id,
         role: ERole.kitchen,
         isOneTime: true,
       });
@@ -57,7 +80,7 @@ export class AuthService {
         name: 'Cashier',
         email: `cashier@${dto.email.split('@')[1]}`,
         password: demoPass,
-        restaurant: dto.restaurant,
+        restaurant: restaurantId._id,
         role: ERole.Cashier,
         isOneTime: true,
       });
@@ -65,7 +88,7 @@ export class AuthService {
       await this.mailerService.sendStaffCredentials(
         user.email,
         user.name,
-        user.restaurant,
+        restaurantId.restaurantName,
         cashier.email,
         demoPass,
         kitchen.email,
@@ -92,6 +115,13 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
 
+    const restaurant = await this.restaurantModel.findOne({
+      _id: user.restaurant,
+    });
+
+    if (!restaurant)
+      throw new CustomError('Restaurant not found', HttpStatus.NOT_FOUND);
+
     const verifiedPassword = verifyPassword(password, user.password);
 
     if (!verifiedPassword)
@@ -104,7 +134,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: user.role,
-      restaurant: user.restaurant,
+      restaurant: restaurant.restaurantName,
     });
 
     if (!token)
