@@ -12,6 +12,16 @@ export class RestaurantService {
     private restaurantModel: Model<RestaurantDocument>,
   ) {}
 
+  // GET: /restaurant/
+  async getAllRestaurant() {
+    const restaurants = await this.restaurantModel.find();
+
+    if (restaurants.length <= 0)
+      throw new CustomError('No restaurants registered', HttpStatus.NOT_FOUND);
+
+    return restaurants;
+  }
+
   // PUT: /restaurant/:id
   async updateRestaurantData(
     id: string,
