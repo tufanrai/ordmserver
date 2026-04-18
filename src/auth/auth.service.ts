@@ -60,6 +60,7 @@ export class AuthService {
     const user = await this.userModel.create({
       password: hashedPassword,
       restaurant: restaurantId._id,
+      isOneTime: false,
       ...dto,
     });
 

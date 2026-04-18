@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { RestaurantController } from './restaurant.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Restaurant, RestaurantSchema } from './schema/restaurant.schema';
+import { AuthMiddleware } from '../auth/middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -13,4 +14,8 @@ import { Restaurant, RestaurantSchema } from './schema/restaurant.schema';
   providers: [RestaurantService],
   controllers: [RestaurantController],
 })
-export class RestaurantModule {}
+export class RestaurantModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes(RestaurantService);
+  }
+}

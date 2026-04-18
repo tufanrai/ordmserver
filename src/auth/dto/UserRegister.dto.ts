@@ -9,7 +9,7 @@ import {
 export class RegisterDto {
   @IsString()
   @IsNotEmpty({ message: 'please enter your full name.' })
-  name: string;
+  name!: string;
 
   @IsString()
   @IsEmail({}, { message: 'please enter a valid email address' })
@@ -17,7 +17,7 @@ export class RegisterDto {
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
     message: 'your email does not match the email standards.',
   })
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'please enter your password' })
@@ -26,8 +26,8 @@ export class RegisterDto {
     message:
       'Password must contain at least one digit, one lowercase, and one uppercase letter',
   })
-  password: string;
+  password!: string;
 
   @IsString()
-  restaurant: string;
+  restaurant!: string;
 }
