@@ -34,7 +34,7 @@ export class User {
   password!: string;
 
   @Prop({
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: [true, 'please enter restaurant id'],
     ref: 'restaurant',
   })
