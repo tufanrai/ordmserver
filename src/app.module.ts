@@ -12,6 +12,9 @@ import { MailService } from './mail/mail.service';
 import { MailModule } from './mail/mail.module';
 import { BillsModule } from './bills/bills.module';
 import { TableModule } from './table/table.module';
+import { OrdersController } from './orders/orders.controller';
+import { OrdersModule } from './orders/orders.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -39,8 +42,10 @@ import { TableModule } from './table/table.module';
     MailModule,
     BillsModule,
     TableModule,
+    OrdersModule,
+    GatewayModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, OrdersController],
   providers: [AppService, MailService],
 })
 export class AppModule {}
