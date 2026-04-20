@@ -4,11 +4,12 @@ import mongoose, { HydratedDocument } from 'mongoose';
 export type BillDocument = HydratedDocument<Bill>;
 
 interface IOrders {
-  itemName: string;
-  price: number;
+  name?: string;
+  price?: number;
+  quantity?: number;
 }
 
-export enum EStatus {
+export enum EPaymentStatus {
   pending = 'Pending',
   paid = 'Paid',
   cancelled = 'cancelled',
@@ -38,7 +39,13 @@ export class Bill {
     ],
     required: [true, 'please enter the items ordered'],
   })
-  orders!: IOrders[];
+  items!: IOrders[];
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, "please pass the user's id"],
+  })
+  userId!: mongoose.Types.ObjectId;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -58,10 +65,10 @@ export class Bill {
 
   @Prop({
     type: String,
-    enum: Object.values(EStatus),
-    default: EStatus.pending,
+    enum: Object.values(EPaymentStatus),
+    default: EPaymentStatus.pending,
   })
-  status!: EStatus;
+  status!: EPaymentStatus;
 
   @Prop({
     type: String,
