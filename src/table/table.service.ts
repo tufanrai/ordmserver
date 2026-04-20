@@ -15,16 +15,12 @@ export default class TableService {
 
   //   GET: /table/
   async getAllTables(id: string) {
-    if (!id)
-      throw new CustomError(
-        'please pass the restaurant id',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
+    if (!id) throw new CustomError('please pass the restaurant id', 406);
 
     const tables = await this.tableModel.find({ restaurant: id });
 
     if (tables.length < 1)
-      throw new CustomError('No any tables available', HttpStatus.NOT_FOUND);
+      throw new CustomError('No any tables available', 404);
 
     return tables;
   }

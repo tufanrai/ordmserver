@@ -4,7 +4,6 @@ import {
   Get,
   Param,
   Body,
-  HttpStatus,
   Post,
   Put,
   Delete,
@@ -20,8 +19,8 @@ export class TableController {
   // GET: /table
   @Get('/')
   getAllTables(@Request() req) {
-    if (!req.user)
-      throw new CustomError("User's data not found", HttpStatus.NOT_ACCEPTABLE);
+    console.log(req.user);
+    if (!req.user) throw new CustomError("User's data not found", 406);
 
     return this.tableService.getAllTables(req.user.restaurant);
   }

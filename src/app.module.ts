@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { MailService } from './mail/mail.service';
 import { MailModule } from './mail/mail.module';
 import { BillsModule } from './bills/bills.module';
+import { TableModule } from './table/table.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { BillsModule } from './bills/bills.module';
     ConfigModule.forRoot({ isGlobal: true }),
     MailModule,
     BillsModule,
+    TableModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
