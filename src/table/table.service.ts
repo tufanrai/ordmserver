@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { createTableDto } from './dto/crete-table.dto';
 import CustomError from '../utils/customError.utils';
+import { updateTableDto } from './dto/update-table.dto';
 
 @Injectable()
 export default class TableService {
@@ -26,14 +27,14 @@ export default class TableService {
   }
 
   //  POST: /table/
-  async addTable(data: createTableDto) {
+  async addTable(id: string, data: createTableDto) {
     if (!data)
       throw new CustomError(
         'Please pass all the reqired data',
         HttpStatus.NOT_ACCEPTABLE,
       );
 
-    const table = await this.tableModel.create(data);
+    const table = await this.tableModel.create({ restaurant: id, ...data });
 
     if (!table)
       throw new CustomError(
@@ -45,7 +46,7 @@ export default class TableService {
   }
 
   //  PUT: /table/:id
-  async updateTable(id: string, data: createTableDto) {
+  async updateTable(id: string, data: updateTableDto) {
     if (!id)
       throw new CustomError(
         'Please pass the table id',

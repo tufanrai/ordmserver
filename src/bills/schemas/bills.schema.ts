@@ -4,15 +4,15 @@ import mongoose, { HydratedDocument } from 'mongoose';
 export type BillDocument = HydratedDocument<Bill>;
 
 interface IOrders {
-  name?: string;
-  price?: number;
-  quantity?: number;
+  itemName: string;
+  price: number;
+  quantity: number;
 }
 
 export enum EPaymentStatus {
   pending = 'Pending',
   paid = 'Paid',
-  cancelled = 'cancelled',
+  cancelled = 'Cancelled',
 }
 
 export enum EPaymentMethod {
@@ -24,7 +24,7 @@ export enum EPaymentMethod {
 export class Bill {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'please pass the id of the restaurant'],
+    required: [true, 'Please pass the id of the restaurant'],
     ref: 'Restaurant',
   })
   restaurantId!: mongoose.Types.ObjectId;
@@ -37,19 +37,13 @@ export class Bill {
         quantity: { type: Number, required: true, default: 1 },
       },
     ],
-    required: [true, 'please enter the items ordered'],
+    required: [true, 'Please enter the items ordered'],
   })
   items!: IOrders[];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "please pass the user's id"],
-  })
-  userId!: mongoose.Types.ObjectId;
-
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    required: [true, 'please pass the table id'],
+    required: [true, 'Please pass the table id'],
     ref: 'Table',
   })
   tableNo!: mongoose.Types.ObjectId;

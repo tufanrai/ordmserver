@@ -10,9 +10,9 @@ import { UpdateItemDto } from './dto/update-item.dto';
 export class ItemsService {
   constructor(@InjectModel(Item.name) private itemModule: Model<Item>) {}
 
-  // GET: /api/items:
-  async getAllItems() {
-    const items = await this.itemModule.find();
+  // GET: /items/
+  async getAllItems(id: string) {
+    const items = await this.itemModule.find({ restaurant: id });
 
     if (items.length <= 0)
       return { message: "You don't have any items to display." };
@@ -20,15 +20,21 @@ export class ItemsService {
     return items;
   }
 
-  // POST: /api/items:
-  async addItem(item: AddItemDto) {
+  // POST: /items:
+  async addItem(id: string, item: AddItemDto) {
+    if (!id)
+      throw new CustomError(
+        'Please pass the restaurant id',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+
     if (!item)
       throw new CustomError(
         'please fill all the inputs',
         HttpStatus.NOT_ACCEPTABLE,
       );
 
-    const items = await this.itemModule.create(item);
+    const items = await this.itemModule.create({ restaurant: id, ...item });
 
     if (!items)
       throw new CustomError(
@@ -39,7 +45,7 @@ export class ItemsService {
     return items;
   }
 
-  // PUT: /api/items;
+  // PUT: /items;
   async updateItem(id: string, newData: UpdateItemDto) {
     const item = await this.itemModule.findById(id);
 
@@ -62,7 +68,7 @@ export class ItemsService {
     return updatedItem;
   }
 
-  // DELETE: /api/items/:id
+  // DELETE: /items/:id
   async deleteItem(id: string) {
     const deleted = await this.itemModule.findByIdAndDelete(id);
 

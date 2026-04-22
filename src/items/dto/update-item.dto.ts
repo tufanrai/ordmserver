@@ -6,8 +6,8 @@ export class UpdateItemDto {
   itemName!: string;
 
   @IsOptional()
-  @IsNumber()
-  price!: number;
+  @IsString()
+  price!: string;
 
   @IsOptional()
   @IsString()

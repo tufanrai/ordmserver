@@ -5,13 +5,22 @@ export type ItemDocument = HydratedDocument<Item>;
 
 @Schema({ timestamps: true })
 export class Item {
-  @Prop({ required: [true, 'please enter the name of the food item.'] })
+  @Prop({
+    type: String,
+    required: [true, 'please enter the name of the food item.'],
+  })
   itemName!: string;
 
-  @Prop({ required: [true, 'please enter the price of the food item.'] })
-  price!: number;
+  @Prop({
+    type: String,
+    required: [true, 'please enter the price of the food item.'],
+  })
+  price!: string;
 
-  @Prop({ required: [true, 'please enter the category of the food item.'] })
+  @Prop({
+    type: String,
+    required: [true, 'please enter the category of the food item.'],
+  })
   category!: string;
 
   @Prop({

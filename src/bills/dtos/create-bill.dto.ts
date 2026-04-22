@@ -8,12 +8,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import mongoose from 'mongoose';
 
-class OrderItemDto {
+export class OrderItemDto {
   @IsString()
   @IsNotEmpty({ message: 'Please enter the item name' })
-  name!: string;
+  itemName!: string;
 
   @IsNumber()
   @Min(0, { message: 'Price cannot be negative' })
@@ -36,8 +35,8 @@ export class BillDto {
   restaurantId!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Please pass the table number' })
-  tableNumber!: mongoose.Types.ObjectId;
+  @IsNotEmpty({ message: 'Please pass the table id' })
+  tableNo!: string;
 
   @IsNumber()
   @Min(0, { message: 'Discount cannot be negative' })
@@ -46,5 +45,6 @@ export class BillDto {
 
   @IsNumber()
   @Min(0, { message: 'Total amount cannot be negative' })
+  @IsNotEmpty({ message: 'Please pass the total amount' })
   totalAmount!: number;
 }

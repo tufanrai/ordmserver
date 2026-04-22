@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 interface IPayload {
   name: string;
   email: string;
   role: string;
-  restaurant: string;
+  restaurant: mongoose.Types.ObjectId;
 }
 
 // Environment variables

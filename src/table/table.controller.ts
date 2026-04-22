@@ -27,8 +27,10 @@ export class TableController {
 
   //   POST: /table
   @Post('/')
-  addNewTable(@Body() data: createTableDto) {
-    return this.tableService.addTable(data);
+  addNewTable(@Request() req, @Body() data: createTableDto) {
+    if (!req.user) throw new CustomError("User's data not found", 406);
+
+    return this.tableService.addTable(req.user.restaurant, data);
   }
 
   // PUT: /table/:id

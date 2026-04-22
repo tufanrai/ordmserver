@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
 import { EStatus } from '../schemas/table.schema';
 
 export class createTableDto {
@@ -11,6 +11,6 @@ export class createTableDto {
   location!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Please pass the status of the table' })
+  @IsOptional()
   status!: EStatus;
 }

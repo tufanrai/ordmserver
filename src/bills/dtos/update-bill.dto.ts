@@ -9,50 +9,34 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { EPaymentMethod, EPaymentStatus } from '../schemas/bills.schema';
-import mongoose from 'mongoose';
-
-class UpdateOrderItemDto {
-  @IsString()
-  @IsOptional()
-  name!: string;
-
-  @IsNumber()
-  @Min(0, { message: 'Price cannot be negative' })
-  @IsOptional()
-  price!: number;
-
-  @IsNumber()
-  @Min(1, { message: 'Quantity must be at least 1' })
-  @IsOptional()
-  quantity!: number;
-}
+import { OrderItemDto } from './create-bill.dto';
 
 export class UpdateBillDto {
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => UpdateOrderItemDto)
-  items!: UpdateOrderItemDto[];
+  @Type(() => OrderItemDto)
+  items?: OrderItemDto[];
 
   @IsString()
   @IsOptional()
-  tableNumber!: mongoose.Types.ObjectId;
+  tableNo?: string;
 
   @IsNumber()
   @Min(0, { message: 'Discount cannot be negative' })
   @IsOptional()
-  discount!: number;
+  discount?: number;
 
   @IsNumber()
   @Min(0, { message: 'Total amount cannot be negative' })
   @IsOptional()
-  totalAmount!: number;
+  totalAmount?: number;
 
   @IsEnum(EPaymentStatus, { message: 'Invalid payment status' })
   @IsOptional()
-  status!: EPaymentStatus;
+  status?: EPaymentStatus;
 
   @IsEnum(EPaymentMethod, { message: 'Invalid payment method' })
   @IsOptional()
-  paymentMethod!: EPaymentMethod;
+  paymentMethod?: EPaymentMethod;
 }

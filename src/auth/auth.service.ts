@@ -116,13 +116,6 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
 
-    const restaurant = await this.restaurantModel.findOne({
-      _id: user.restaurant,
-    });
-
-    if (!restaurant)
-      throw new CustomError('Restaurant not found', HttpStatus.NOT_FOUND);
-
     const verifiedPassword = verifyPassword(password, user.password);
 
     if (!verifiedPassword)
@@ -135,7 +128,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: user.role,
-      restaurant: restaurant.restaurantName,
+      restaurant: user.restaurant,
     });
 
     if (!token)
