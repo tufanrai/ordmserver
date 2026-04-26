@@ -59,7 +59,7 @@ export default class TableService {
 
     if (data.location) table.location = data.location;
     if (data.status) table.status = data.status;
-    if (data.tableNo) table.tableNo = data.tableNo;
+    if (data.tableNumber) table.tableNumber = data.tableNumber;
 
     const updatedTableData = await table.save({ validateModifiedOnly: true });
 

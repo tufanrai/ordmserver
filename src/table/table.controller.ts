@@ -16,21 +16,19 @@ import { createTableDto } from './dto/crete-table.dto';
 export class TableController {
   constructor(private tableService: TableService) {}
 
-  // GET: /table
-  @Get('/')
-  getAllTables(@Request() req) {
-    console.log(req.user);
-    if (!req.user) throw new CustomError("User's data not found", 406);
-
-    return this.tableService.getAllTables(req.user.restaurant);
-  }
-
   //   POST: /table
   @Post('/')
   addNewTable(@Request() req, @Body() data: createTableDto) {
     if (!req.user) throw new CustomError("User's data not found", 406);
-
     return this.tableService.addTable(req.user.restaurant, data);
+  }
+
+  // GET: /table
+  @Get('/')
+  getAllTables(@Request() req) {
+    if (!req.user) throw new CustomError("User's data not found", 406);
+
+    return this.tableService.getAllTables(req.user.restaurant);
   }
 
   // PUT: /table/:id

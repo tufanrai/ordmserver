@@ -1,14 +1,18 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 import { EStatus } from '../schemas/table.schema';
 
 export class updateTableDto {
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  tableNo!: string;
+  tableNumber!: number;
 
   @IsString()
   @IsOptional()
   location!: string;
+
+  @IsNumber()
+  @IsOptional()
+  capacity!: number;
 
   @IsString()
   @IsOptional()

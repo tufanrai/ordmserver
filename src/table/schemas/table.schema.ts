@@ -11,7 +11,7 @@ export enum EStatus {
 @Schema({ timestamps: true })
 export class Table {
   @Prop({ type: Number, required: [true, 'please pass the table number'] })
-  tableNo!: string;
+  tableNumber!: number;
 
   @Prop({
     type: String,
@@ -25,6 +25,12 @@ export class Table {
     ref: 'Restaurant',
   })
   restaurant!: mongoose.Types.ObjectId;
+
+  @Prop({
+    type: Number,
+    required: [true, 'please pass the tables capacity'],
+  })
+  capacity!: number;
 
   @Prop({
     type: String,
