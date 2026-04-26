@@ -29,5 +29,6 @@ export class RegisterDto {
   password!: string;
 
   @IsString()
+  @IsNotEmpty({ message: 'please enter the restaurant name' })
   restaurant!: string;
 }

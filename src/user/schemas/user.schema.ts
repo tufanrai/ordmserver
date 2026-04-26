@@ -36,7 +36,7 @@ export class User {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     required: [true, 'please enter restaurant id'],
-    ref: 'restaurant',
+    ref: 'Restaurant',
   })
   restaurant!: mongoose.Types.ObjectId;
 
@@ -46,9 +46,6 @@ export class User {
     default: ERole.owner,
   })
   role!: string;
-
-  @Prop({ type: Boolean, required: true, default: true })
-  isOneTime!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

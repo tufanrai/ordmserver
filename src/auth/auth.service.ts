@@ -37,11 +37,11 @@ export class AuthService {
     if (!restaurant)
       throw new CustomError('please enter the name of the restaurant', 401);
 
-    const restaurantId = await this.restaurantModel.create({
+    const Restaurant = await this.restaurantModel.create({
       restaurantName: restaurant,
     });
 
-    if (!restaurantId)
+    if (!Restaurant)
       throw new CustomError(
         'Something went wrong, Please try again',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -59,8 +59,7 @@ export class AuthService {
     // User's account creation
     const user = await this.userModel.create({
       password: hashedPassword,
-      restaurant: restaurantId._id,
-      isOneTime: false,
+      restaurant: Restaurant._id,
       ...dto,
     });
 
@@ -68,28 +67,28 @@ export class AuthService {
     if (user) {
       const demoPass = `TempPass${Math.random()}`;
 
+      const hashedPassword = await hashPassword(demoPass);
+
       const kitchen = await this.userModel.create({
         name: 'Kitchen',
         email: `kitchen@${dto.email.split('@')[1]}`,
-        password: demoPass,
-        restaurant: restaurantId._id,
+        password: hashedPassword,
+        restaurant: Restaurant._id,
         role: ERole.kitchen,
-        isOneTime: true,
       });
 
       const cashier = await this.userModel.create({
         name: 'Cashier',
         email: `cashier@${dto.email.split('@')[1]}`,
-        password: demoPass,
-        restaurant: restaurantId._id,
+        password: hashedPassword,
+        restaurant: Restaurant._id,
         role: ERole.Cashier,
-        isOneTime: true,
       });
 
       await this.mailerService.sendStaffCredentials(
         user.email,
         user.name,
-        restaurantId.restaurantName,
+        Restaurant.restaurantName,
         cashier.email,
         demoPass,
         kitchen.email,
@@ -103,7 +102,7 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
-    return user;
+    return { message: 'Successfully registered, please login', user };
   }
 
   // POST: /api/auth/login
@@ -116,7 +115,7 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
 
-    const verifiedPassword = verifyPassword(password, user.password);
+    const verifiedPassword = await verifyPassword(password, user.password);
 
     if (!verifiedPassword)
       throw new CustomError(
@@ -137,6 +136,6 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
-    return { user, token };
+    return { message: 'User successfully logged in', user, token };
   }
 }
